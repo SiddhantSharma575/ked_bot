@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Card, CardContent, Typography } from '@mui/material';
@@ -6,13 +6,18 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {useNavigate} from 'react-router-dom'
 import { commonComponentStyles } from './styles/components.styles';
 import styles from "./styles/components.module.scss"
+import {auth} from "../firebase"
+import {signInWithEmailAndPassword} from "firebase/auth"
+import { AuthContext } from '../context/AuthContext';
 
 const LoginTab = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState(false);
-    const [isValidUser, setIsValidUser] = useState(false)
+    const [isValidUser, setIsValidUser] = useState("")
     const navigate = useNavigate()
+    const { user,setUser } = useContext(AuthContext);
+
 
     const handleEmailChange = (event) => {
         const emailValue = event.target.value;
@@ -27,12 +32,25 @@ const LoginTab = () => {
         setPassword(event.target.value);
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         // Implement your login logic here, e.g., submit data to an API or perform client-side validation
         // setIsValidUser(true)
+       try {
+        const res  = await signInWithEmailAndPassword(auth,email,password);
+        console.log("User", res.user)
+        setUser({
+            uid : res.user?.uid,
+            email : res.user?.email
+        })
         navigate("/chats")
-
         console.log(`Email: ${email}, Password: ${password}`);
+       } catch (error) {
+        console.log("ERROR", error)
+        setIsValidUser(error.message + "!Please Register and try again");
+        setTimeout(() => {
+            setIsValidUser("")
+        }, 2000);
+       }
     };
 
     return (
@@ -61,7 +79,7 @@ const LoginTab = () => {
                 Login
             </Button>
             {
-                isValidUser && (
+                isValidUser.length > 0 && (
                     <Card variant="outlined" style={commonComponentStyles.errorCard}>
                         <CardContent style={commonComponentStyles.errorCardContent}>
                             <InfoOutlinedIcon style={commonComponentStyles.infoOutlineIcon} />
