@@ -8,7 +8,7 @@ import { ChatList } from '../../data/chatList'
 const HomeScreen = () => {
   return (
     <div className='container'>
-        <AppBar />
+        <AppBar isRightShown={true} />
         <Box width={'50%'} margin={'auto'}>
           <Typography mt={'15px'} fontSize={'18px'} component={'h1'} fontWeight={'bold'}>Recent Chats</Typography>
         </Box>

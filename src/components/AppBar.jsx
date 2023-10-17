@@ -9,10 +9,17 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { AccountCircle } from '@mui/icons-material';
 import ChatIcon from '@mui/icons-material/Chat';
+import { useNavigate } from 'react-router-dom';
 
 export default function ButtonAppBar({ isRightShown }) {
+    const navigate = useNavigate()
+
+    const handleNavigation = () => {
+        const id = Math.floor(Math.random() * 999);
+        navigate(`/chat/${id}`)
+    }
     return (
-        <Box width={'50%'} margin={'auto'} sx={{ flexGrow: 1 }}>
+        <Box width={'50%'} margin={'auto'} sx={{ flexGrow: 1 }} mt={5}>
             <AppBar position="static" style={{
                 backgroundColor: '#fff'
             }}>
@@ -60,7 +67,7 @@ export default function ButtonAppBar({ isRightShown }) {
                                 justifyContent: 'center',
                                 borderRadius: '10px',
                                 cursor: 'pointer'
-                            }}>
+                            }} onClick={handleNavigation}>
                                 <ChatIcon style={{
                                     color: '#000'
                                 }} />

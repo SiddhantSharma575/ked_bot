@@ -4,6 +4,7 @@ import { Box, Tab, Tabs } from '@mui/material';
 import TabPanel from '../../components/TabPanel';
 import LoginTab from '../../components/LoginTab';
 import RegisterTab from '../../components/RegisterTab';
+import "./authScreen.scss"
 
 const AuthScreen = () => {
     const [tabValue, setTabValue] = useState(0)
@@ -11,13 +12,20 @@ const AuthScreen = () => {
         setTabValue(newValue);
     };
     return (
-        <Box
+       <div className='container'>
+          <Box mt={10}>
+          <Box
             flexDirection={"column"}
             display={"flex"}
-            width={"100vw"}
-            height={"100vh"}
+            width={"50%"}
+            // height={"60vh"}
+            marginTop={5}
             justifyContent={"center"}
-            alignItems={"center"}>
+            alignItems={"center"}
+            margin={"auto"}
+            mt={"10%"}
+            bgcolor={"#fff"}
+            >
             <Box
                 display={"flex"}
                 justifyContent={"center"}
@@ -26,7 +34,8 @@ const AuthScreen = () => {
                 height={16}
                 padding={3}
                 bgcolor="#7fc795"
-                borderRadius={5}>
+                borderRadius={5}
+                mt={3}>
                 <SmartToyOutlinedIcon style={{
                     color : "blue"
                 }} />
@@ -52,7 +61,9 @@ const AuthScreen = () => {
             <TabPanel value={tabValue} index={1}>
                 <RegisterTab />
             </TabPanel>
-        </Box>
+          </Box>
+          </Box>
+        </div>
     )
 }
 
