@@ -3,12 +3,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Card, CardContent, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useNavigate } from "react-router-dom"
 
 const RegisterTab = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword,setConfirmPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [emailError, setEmailError] = useState(false);
+    const navigate = useNavigate()
 
     const handleEmailChange = (event) => {
         const emailValue = event.target.value;
@@ -25,14 +27,15 @@ const RegisterTab = () => {
 
     const handleLogin = () => {
         // Implement your login logic here, e.g., submit data to an API or perform client-side validation
+        navigate("/chats")
         console.log(`Email: ${email}, Password: ${password}`);
     };
 
     return (
         <div style={{
-            width : "300px",
-            height : "400px",
-            flexDirection   : "column"
+            width: "300px",
+            height: "400px",
+            flexDirection: "column"
         }} >
             <TextField
                 label="Email"
@@ -54,7 +57,7 @@ const RegisterTab = () => {
                 onChange={handlePasswordChange}
                 margin="normal"
             />
-              <TextField
+            <TextField
                 label="Confirm Password"
                 type="password"
                 variant="outlined"

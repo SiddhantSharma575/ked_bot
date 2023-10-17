@@ -2,13 +2,19 @@ import { Box, Button, Card, CardActions, CardContent, Typography } from '@mui/ma
 import React from 'react'
 import ChatIcon from '@mui/icons-material/Chat';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import {useNavigate} from "react-router-dom"
 
 const ChatItem = ({chat}) => {
+    const navigate = useNavigate()
+
+    const handleChange  = () => {
+        navigate(`/chat/${chat.id}`)
+    }
     return (
         <Card sx={{ minWidth: 275 }} style={{
             cursor : 'pointer',
             marginTop : '1rem'
-        }}>
+        }} onClick={handleChange}>
             <CardContent style={{
                 display : 'flex',
             }}>

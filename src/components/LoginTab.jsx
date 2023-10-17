@@ -3,12 +3,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Card, CardContent, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import {useNavigate} from 'react-router-dom'
 
 const LoginTab = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState(false);
     const [isValidUser, setIsValidUser] = useState(false)
+    const navigate = useNavigate()
 
     const handleEmailChange = (event) => {
         const emailValue = event.target.value;
@@ -25,7 +27,9 @@ const LoginTab = () => {
 
     const handleLogin = () => {
         // Implement your login logic here, e.g., submit data to an API or perform client-side validation
-        setIsValidUser(true)
+        // setIsValidUser(true)
+        navigate("/chats")
+
         console.log(`Email: ${email}, Password: ${password}`);
     };
 
