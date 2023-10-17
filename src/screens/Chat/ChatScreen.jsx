@@ -4,6 +4,7 @@ import { Box, IconButton, TextField } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send';
 import SingleChat from '../../components/SingleChat';
 import { Chats } from '../../data/chats';
+import styles from "./chatScreen.module.scss"
 
 const ChatScreen = () => {
   const [chat, setChat] = useState("")
@@ -20,19 +21,10 @@ const ChatScreen = () => {
     setChat("")
   }
   return (
-    <div className='container'>
+    <div className={styles.container}>
       <AppBar isRightShown={false} />
-      <div style={{
-        margin: 'auto',
-        width: '50%',
-        height: '80vh',
-        backgroundColor: '#fff',
-        marginTop: '2rem',
-      }}>
-        <div style={{
-          height: '65vh',
-          overflowY: 'scroll'
-        }}>
+      <div className={styles.inner_container}>
+        <div className={styles.chat_container}>
           {
             chats.map((chat) => (
               <SingleChat key={chat.id} text={chat.text} isSender={chat.isSender} productList={chat.productList} />

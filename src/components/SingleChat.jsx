@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Box, Card, CardContent, Modal, Typography } from "@mui/material"
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import ZoomInOutlinedIcon from '@mui/icons-material/ZoomInOutlined';
+import styles from "./styles/components.module.scss"
+import { commonComponentStyles } from './styles/components.styles';
 
 
 const SingleChat = ({ text, isSender, productList }) => {
@@ -21,13 +23,7 @@ const SingleChat = ({ text, isSender, productList }) => {
       };
       
     return (
-        <div style={{
-            display: "flex",
-            flexDirection: "row",
-            marginTop: "1rem",
-            justifyContent: isSender && "flex-end",
-            marginRight: isSender && "10px"
-        }}>
+        <div style={commonComponentStyles.chatContainer(isSender)}>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -40,17 +36,10 @@ const SingleChat = ({ text, isSender, productList }) => {
             </Modal>
             {
                 !isSender && (
-                    <SmartToyOutlinedIcon style={{
-                        color: "blue",
-                        marginRight: "16px"
-                    }} />
+                    <SmartToyOutlinedIcon style={commonComponentStyles.toyOutline} />
                 )
             }
-            <Card style={{
-                width: "300px",
-                backgroundColor: isSender ? "#9bf2b2" : "#c9d4cd",
-                borderRadius: "5px"
-            }}>
+            <Card style={commonComponentStyles.chatCard(isSender)}>
                 <CardContent>
 
                     <Typography>
@@ -59,12 +48,7 @@ const SingleChat = ({ text, isSender, productList }) => {
 
                     {
                         productList !== undefined && productList.length > 0 && productList.map((prodcut) => (
-                            <Card style={{
-                                marginTop: "1rem",
-                                alignItems: "center",
-                                cursor: "pointer",
-                                borderRadius: "5px"
-                            }} onClick={() => {
+                            <Card style={commonComponentStyles.listCard} onClick={() => {
                                  setOpen(!open);
                                  setImage(prodcut.img)
                              }}>

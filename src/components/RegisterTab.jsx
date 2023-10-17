@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import { Card, CardContent, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useNavigate } from "react-router-dom"
+import { commonComponentStyles } from './styles/components.styles';
+import styles from "./styles/components.module.scss"
 
 const RegisterTab = () => {
     const [email, setEmail] = useState('');
@@ -32,11 +34,7 @@ const RegisterTab = () => {
     };
 
     return (
-        <div style={{
-            width: "300px",
-            height: "400px",
-            flexDirection: "column"
-        }} >
+        <div className={styles.loginContainer} >
             <TextField
                 label="Email"
                 type="email"
@@ -66,11 +64,7 @@ const RegisterTab = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 margin="normal"
             />
-            <Button style={{
-                width: "100%",
-                backgroundColor: "#000",
-                marginTop: "1rem"
-            }} variant="contained" color="primary" onClick={handleLogin}>
+            <Button style={commonComponentStyles.loginBtn} variant="contained" color="primary" onClick={handleLogin}>
                 Register
             </Button>
         </div>

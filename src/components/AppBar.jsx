@@ -10,6 +10,8 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { AccountCircle } from '@mui/icons-material';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from 'react-router-dom';
+import { commonComponentStyles } from './styles/components.styles';
+import styles from "./styles/components.module.scss"
 
 export default function ButtonAppBar({ isRightShown }) {
     const navigate = useNavigate()
@@ -20,13 +22,8 @@ export default function ButtonAppBar({ isRightShown }) {
     }
     return (
         <Box width={'50%'} margin={'auto'} sx={{ flexGrow: 1 }} mt={5}>
-            <AppBar position="static" style={{
-                backgroundColor: '#fff'
-            }}>
-                <Toolbar style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between'
-                }}>
+            <AppBar position="static" style={commonComponentStyles.appBar}>
+                <Toolbar style={commonComponentStyles.toolbar}>
                     <Box display={'flex'} flexDirection={'row'}>
                         <IconButton
                             size="large"
@@ -57,17 +54,7 @@ export default function ButtonAppBar({ isRightShown }) {
                     </Box>
                     {
                         isRightShown && (
-                            <div style={{
-                                backgroundColor: '#7fc795',
-                                width: '120px',
-                                // height : '30px',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                padding: '5px',
-                                justifyContent: 'center',
-                                borderRadius: '10px',
-                                cursor: 'pointer'
-                            }} onClick={handleNavigation}>
+                            <div className={styles.appBarRightContainer} onClick={handleNavigation}>
                                 <ChatIcon style={{
                                     color: '#000'
                                 }} />

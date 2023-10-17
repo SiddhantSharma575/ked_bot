@@ -1,5 +1,5 @@
 import React from 'react'
-import './homeScreen.scss'
+import styles from  "./homeScreen.module.scss"
 import AppBar from '../../components/AppBar'
 import { Box, Typography } from '@mui/material'
 import ChatItem from '../../components/ChatItem'
@@ -7,7 +7,7 @@ import { ChatList } from '../../data/chatList'
 
 const HomeScreen = () => {
   return (
-    <div className='container'>
+    <div className={styles.container}>
         <AppBar isRightShown={true} />
         <Box width={'50%'} margin={'auto'}>
           <Typography mt={'15px'} fontSize={'18px'} component={'h1'} fontWeight={'bold'}>Recent Chats</Typography>

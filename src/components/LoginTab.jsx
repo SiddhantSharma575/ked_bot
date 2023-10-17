@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import { Card, CardContent, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {useNavigate} from 'react-router-dom'
+import { commonComponentStyles } from './styles/components.styles';
+import styles from "./styles/components.module.scss"
 
 const LoginTab = () => {
     const [email, setEmail] = useState('');
@@ -34,11 +36,7 @@ const LoginTab = () => {
     };
 
     return (
-        <div style={{
-            width: "300px",
-            height: "400px",
-            flexDirection: "column"
-        }}  >
+        <div className={styles.loginContainer} >
             <TextField
                 label="Email"
                 type="email"
@@ -59,27 +57,14 @@ const LoginTab = () => {
                 onChange={handlePasswordChange}
                 margin="normal"
             />
-            <Button style={{
-                width: "100%",
-                backgroundColor: "#000",
-                marginTop: "1rem"
-            }} variant="contained" color="primary" onClick={handleLogin}>
+            <Button style={commonComponentStyles.loginBtn} variant="contained" color="primary" onClick={handleLogin}>
                 Login
             </Button>
             {
                 isValidUser && (
-                    <Card variant="outlined" style={{
-                        marginTop: "1rem",
-                        borderColor: "red"
-                    }}>
-                        <CardContent style={{
-                            display: "flex",
-                            alignItems: "center",
-                        }}>
-                            <InfoOutlinedIcon style={{
-                                color: "red",
-                                marginRight: "0.5rem"
-                            }} />
+                    <Card variant="outlined" style={commonComponentStyles.errorCard}>
+                        <CardContent style={commonComponentStyles.errorCardContent}>
+                            <InfoOutlinedIcon style={commonComponentStyles.infoOutlineIcon} />
                             <Typography variant="body2" color="error">
                                 The email you entered is invalid.
                             </Typography>

@@ -1,0 +1,19 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #ccc;
+    overflow: hidden;
+
+    .inner_container {
+        margin: auto;
+        width: 50%;
+        height: 80vh;
+        background-color: #fff;
+        margin-top: 2rem;
+
+        .chat_container {
+            height: 65vh;
+            overflow-y: scroll
+        }
+    }
+}
