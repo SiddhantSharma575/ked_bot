@@ -6,9 +6,19 @@ import SingleChat from '../../components/SingleChat';
 import { Chats } from '../../data/chats';
 
 const ChatScreen = () => {
-  const [productList,setProductList] = useState()
+  const [chat, setChat] = useState("")
+  const [chats, setChats] = useState(Chats)
 
-
+  const handleSend = () => {
+    let item = {
+      id: Chats.length + 1,
+      text: chat,
+      isSender: true,
+      productList: []
+    }
+    setChats([...chats, item])
+    setChat("")
+  }
   return (
     <div className='container'>
       <AppBar isRightShown={false} />
@@ -20,34 +30,34 @@ const ChatScreen = () => {
         marginTop: '2rem',
       }}>
         <div style={{
-          height : '65vh',
-          overflowY : 'scroll'
+          height: '65vh',
+          overflowY: 'scroll'
         }}>
           {
-            Chats.map((chat) => (
+            chats.map((chat) => (
               <SingleChat key={chat.id} text={chat.text} isSender={chat.isSender} productList={chat.productList} />
             ))
           }
         </div>
         <Box zIndex={9999} marginLeft={5} marginTop={3} marginRight={3}>
-        <TextField
-          // label="Email"
-          placeholder='Type a Message'
-          variant="outlined"
-          // value={email}
-          fullWidth
-          // onChange={handleEmailChange}
-          margin="normal"
-          InputProps={{
-            endAdornment: (
-              <IconButton>
-                <SendIcon />
-              </IconButton>
-            ),
-          }}
+          <TextField
+            // label="Email"
+            placeholder='Type a Message'
+            variant="outlined"
+            value={chat}
+            fullWidth
+            onChange={(e) => setChat(e.target.value)}
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={handleSend}>
+                  <SendIcon />
+                </IconButton>
+              ),
+            }}
           // error={emailError}
           // helperText={emailError ? 'enter a valid email address' : ''}
-        />
+          />
         </Box>
       </div>
     </div>
