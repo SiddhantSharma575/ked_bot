@@ -6,7 +6,7 @@ import SingleChat from '../../components/SingleChat';
 import { Chats } from '../../data/chats';
 import styles from "./chatScreen.module.scss"
 import { useParams } from 'react-router-dom';
-import { query,  collection, where, getDocs, updateDoc, arrayUnion, doc } from 'firebase/firestore';
+import { query,  collection, where, getDocs, updateDoc, arrayUnion, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 const ChatScreen = () => {
@@ -24,7 +24,20 @@ const ChatScreen = () => {
   }
 
   useEffect(() => {
-    fetchChats()
+    const chatsRef = collection(db, 'chats');
+
+    const unsubscribe = onSnapshot(chatsRef, (querySnapshot) => {;
+      querySnapshot.forEach((doc) => {
+        if(doc.data().id === params.id) {
+        console.log("hello", doc.data().allChats)
+        setChats(doc.data().allChats)
+        }
+      });
+    });
+
+    // This unsubscribe function is important to prevent memory leaks.
+    return () => unsubscribe();
+    // fetchChats()
   }, [])
 
   const handleSend = () => {
@@ -63,7 +76,7 @@ const ChatScreen = () => {
         })
       }).then(() => {
         console.log("Message send succesfully")
-        fetchChats()
+        // fetchChats()
       })
       .catch((error) => console.log(error))
     })
