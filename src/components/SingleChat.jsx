@@ -22,6 +22,7 @@ const SingleChat = ({ text, isSender, productList }) => {
         p: 4,
       };
       
+      console.log("productList", productList)
     return (
         <div style={commonComponentStyles.chatContainer(isSender)}>
             <Modal

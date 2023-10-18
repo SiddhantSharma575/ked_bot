@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AppBar from '../../components/AppBar'
 import { Box, IconButton, TextField } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send';
@@ -6,17 +6,18 @@ import SingleChat from '../../components/SingleChat';
 import { Chats } from '../../data/chats';
 import styles from "./chatScreen.module.scss"
 import { useParams } from 'react-router-dom';
-import { query,  collection, where, getDocs, updateDoc, arrayUnion, doc, onSnapshot } from 'firebase/firestore';
+import { query, collection, where, getDocs, updateDoc, arrayUnion, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 const ChatScreen = () => {
   const [chat, setChat] = useState("")
   const [chats, setChats] = useState([])
   const params = useParams()
-  console.log("Params" , params.id)
+  console.log("Params", params.id)
+  const containerRef = useRef(null)
 
   const fetchChats = async () => {
-    const q = query(collection(db,"chats"), where("id" , "==", params.id));
+    const q = query(collection(db, "chats"), where("id", "==", params.id));
     const querySanpsots = await getDocs(q)
     querySanpsots.forEach((doc) => {
       setChats(doc.data().allChats)
@@ -24,16 +25,36 @@ const ChatScreen = () => {
   }
 
   useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView(
+        {
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest'
+        })
+    }
+  }, [chats])
+
+  useEffect(() => {
     const chatsRef = collection(db, 'chats');
 
-    const unsubscribe = onSnapshot(chatsRef, (querySnapshot) => {;
+    const unsubscribe = onSnapshot(chatsRef, (querySnapshot) => {
+      ;
       querySnapshot.forEach((doc) => {
-        if(doc.data().id === params.id) {
-        console.log("hello", doc.data().allChats)
-        setChats(doc.data().allChats)
+        if (doc.data().id === params.id) {
+          console.log("hello", doc.data().allChats)
+          setChats(doc.data().allChats)
         }
       });
     });
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView(
+        {
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest'
+        })
+    }
 
     // This unsubscribe function is important to prevent memory leaks.
     return () => unsubscribe();
@@ -50,11 +71,11 @@ const ChatScreen = () => {
     // }
     // setChats([...chats, item])
     setChat("")
-  }
+  } 
 
   const sendChat = async () => {
-    const chatCollectionRef =  collection(db, "chats");
-    const q = query(collection(db,"chats"), where("id" , "==", params.id));
+    const chatCollectionRef = collection(db, "chats");
+    const q = query(collection(db, "chats"), where("id", "==", params.id));
     const docs = await getDocs(q);
     docs.forEach((docum) => {
       const data = docum.data();
@@ -68,8 +89,8 @@ const ChatScreen = () => {
       const docRef = doc(db, "chats", docum.id);
 
       updateDoc(docRef, {
-        allChats : arrayUnion({
-          id: docum.data().allChats.length+1,
+        allChats: arrayUnion({
+          id: docum.data().allChats.length + 1,
           text: chat,
           isSender: true,
           productList: []
@@ -78,20 +99,22 @@ const ChatScreen = () => {
         console.log("Message send succesfully")
         // fetchChats()
       })
-      .catch((error) => console.log(error))
+        .catch((error) => console.log(error))
     })
   }
   return (
     <div className={styles.container}>
       <AppBar isRightShown={false} />
       <div className={styles.inner_container}>
-        <div className={styles.chat_container}>
+        <div className={styles.chat_container} >
           {
             chats.map((chat) => (
               <SingleChat key={chat.id} text={chat.text} isSender={chat.isSender} productList={chat.productList} />
             ))
           }
+          <div ref={containerRef}/>
         </div>
+
         <Box zIndex={9999} marginLeft={5} marginTop={3} marginRight={3}>
           <TextField
             // label="Email"
