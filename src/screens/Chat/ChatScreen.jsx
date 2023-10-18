@@ -6,8 +6,9 @@ import SingleChat from '../../components/SingleChat';
 import { Chats } from '../../data/chats';
 import styles from "./chatScreen.module.scss"
 import { useParams } from 'react-router-dom';
-import { query, collection, where, getDocs, updateDoc, arrayUnion, doc, onSnapshot } from 'firebase/firestore';
+import { query, collection, where, getDocs, updateDoc, arrayUnion, doc, onSnapshot, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { productIds } from '../../data/productCard';
 
 const ChatScreen = () => {
   const [chat, setChat] = useState("")
@@ -16,13 +17,13 @@ const ChatScreen = () => {
   console.log("Params", params.id)
   const containerRef = useRef(null)
 
-  const fetchChats = async () => {
-    const q = query(collection(db, "chats"), where("id", "==", params.id));
-    const querySanpsots = await getDocs(q)
-    querySanpsots.forEach((doc) => {
-      setChats(doc.data().allChats)
-    })
-  }
+  // const fetchChats = async () => {
+  //   const q = query(collection(db, "chats"), where("id", "==", params.id));
+  //   const querySanpsots = await getDocs(q)
+  //   querySanpsots.forEach((doc) => {
+  //     setChats(doc.data().allChats)
+  //   })
+  // }
 
   useEffect(() => {
     if (containerRef.current) {
@@ -70,8 +71,75 @@ const ChatScreen = () => {
     //   productList: []
     // }
     // setChats([...chats, item])
-    setChat("")
-  } 
+
+  }
+  function stringContainsAnyElement(string, array) {
+    for (const element of array) {
+      if (string.includes(element)) {
+        return element;
+      }
+    }
+    return false;
+  }
+
+  const sendAutomatedMesssage = async (chat) => {
+    let res = stringContainsAnyElement(chat, productIds);
+    if (res.length > 0) {
+      let selectedProductList = []
+      const q1  =  query(collection(db, "productList"), where("id", "==", res));
+      const productDos = await getDocs(q1);
+      productDos.forEach((docum) => {
+        selectedProductList.push(docum.data())
+      })
+      const q = query(collection(db, "chats"), where("id", "==", params.id));
+      const docs = await getDocs(q);
+      docs.forEach((docum) => {
+        const docRef = doc(db, "chats", docum.id);
+        updateDoc(docRef, {
+          allChats: arrayUnion({
+            id: docum.data().allChats.length + 1,
+            text: "Certainly! Here are all the matching products that matches your criteria",
+            isSender: false,
+            productList: selectedProductList
+          }),
+          recentChat: "Certainly! Here are all the matching products that matches your criteria",
+          timestamps: Timestamp.fromDate(new Date())
+        }).then(() => {
+          console.log("Message send succesfully")
+          // fetchChats()
+        })
+          .catch((error) => console.log(error))
+      })
+
+    } else {
+      const q = query(collection(db, "chats"), where("id", "==", params.id));
+      const docs = await getDocs(q);
+      docs.forEach((docum) => {
+        const docRef = doc(db, "chats", docum.id);
+        let idText = "";
+        productIds.forEach((ele, index) => {
+          if (index !== productIds.length - 1)
+            idText += ele + ", "
+          else
+            idText += ele
+        })
+        updateDoc(docRef, {
+          allChats: arrayUnion({
+            id: docum.data().allChats.length + 1,
+            text: `Please provide us valid product id, Here are list of id's ${idText}`,
+            isSender: false,
+            productList: []
+          }),
+          recentChat: `Please provide us valid product id, Here are list of id's ${idText}`,
+          timestamps: Timestamp.fromDate(new Date())
+        }).then(() => {
+          console.log("Message send succesfully")
+          // fetchChats()
+        })
+          .catch((error) => console.log(error))
+      })
+    }
+  }
 
   const sendChat = async () => {
     const chatCollectionRef = collection(db, "chats");
@@ -94,10 +162,17 @@ const ChatScreen = () => {
           text: chat,
           isSender: true,
           productList: []
-        })
+        }),
+        recentChat: chat,
+        timestamps: Timestamp.fromDate(new Date())
       }).then(() => {
         console.log("Message send succesfully")
         // fetchChats()
+        let recentChat = chat;
+        setTimeout(() => {
+          sendAutomatedMesssage(recentChat);
+        }, 2000)
+        setChat("")
       })
         .catch((error) => console.log(error))
     })
@@ -112,7 +187,7 @@ const ChatScreen = () => {
               <SingleChat key={chat.id} text={chat.text} isSender={chat.isSender} productList={chat.productList} />
             ))
           }
-          <div ref={containerRef}/>
+          <div ref={containerRef} />
         </div>
 
         <Box zIndex={9999} marginLeft={5} marginTop={3} marginRight={3}>
