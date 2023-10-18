@@ -6,6 +6,7 @@ import LoginTab from '../../components/LoginTab';
 import RegisterTab from '../../components/RegisterTab';
 import styles from "./authScreen.module.scss"
 import { AuthStyles } from './auth.styles';
+import logo from "../../assets/chat_icon.png"
 
 const AuthScreen = () => {
     const [tabValue, setTabValue] = useState(0)
@@ -27,7 +28,7 @@ const AuthScreen = () => {
             mt={"10%"}
             bgcolor={"#fff"}
             >
-            <Box
+            {/* <Box
                 display={"flex"}
                 justifyContent={"center"}
                 alignItems={"center"}
@@ -40,7 +41,8 @@ const AuthScreen = () => {
                 <SmartToyOutlinedIcon style={{
                     color : "blue"
                 }} />
-            </Box>
+            </Box> */}
+            <img src={logo} width={64} height={48} alt="logo" style={{ marginTop : "1rem" }} />
             <Tabs style={{
                 marginTop: "1rem"
             }} indicatorColor={null} value={tabValue} onChange={handleTabChange} centered>

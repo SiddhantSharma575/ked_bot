@@ -12,11 +12,11 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from 'react-router-dom';
 import { commonComponentStyles } from './styles/components.styles';
 import styles from "./styles/components.module.scss"
-import {auth, db} from "../firebase"
+import { auth, db } from "../firebase"
 import { Timestamp, addDoc, arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
 import firebase from "firebase/app"
 import { v4 as uuid } from "uuid";
-
+import logo from "../assets/chat_icon.png"
 
 export default function ButtonAppBar({ isRightShown }) {
     const navigate = useNavigate()
@@ -24,36 +24,33 @@ export default function ButtonAppBar({ isRightShown }) {
 
     const handleNavigation = async (event) => {
         event.preventDefault();
-        if(!auth.currentUser) {
+        if (!auth.currentUser) {
             alert("Please Login")
             return;
-        }   
+        }
         try {
 
-            const id = Math.floor(Math.random() * 999);
-            // const chatsRef = doc(db,"chats", auth.currentUser?.uid)
-            
-            const newChat  = {
-                id : unique_id.slice(0,8),
-                uid : auth.currentUser?.uid,
-                timestamps : Timestamp.fromDate(new Date()),
-                recentChat : "Please provide me details of product id 1234566",
-                allChats : [
+            const newChat = {
+                id: unique_id.slice(0, 8),
+                uid: auth.currentUser?.uid,
+                timestamps: Timestamp.fromDate(new Date()),
+                recentChat: "Please provide me details of product id 1234566",
+                allChats: [
                     {
                         id: 1,
                         text: "Hello there! How may I assist you today? To get started,please provide the ProductI ID you'd like information about",
                         isSender: false,
                         productList: []
-                      },
+                    },
                 ]
             }
             // await updateDoc(chatsRef, {
             //     chats : arrayUnion(newChat)
             // })
-             await addDoc(collection(db, "chats"), newChat)
-            navigate(`/chat/${unique_id.slice(0,8)}`)   
+            await addDoc(collection(db, "chats"), newChat)
+            navigate(`/chat/${unique_id.slice(0, 8)}`)
         } catch (error) {
-           
+
         }
     }
     return (
@@ -73,7 +70,7 @@ export default function ButtonAppBar({ isRightShown }) {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Box
+                        {/* <Box
                             component={'div'}
                             display={"flex"}
                             justifyContent={"center"}
@@ -86,7 +83,8 @@ export default function ButtonAppBar({ isRightShown }) {
                             <SmartToyOutlinedIcon style={{
                                 color: "blue"
                             }} />
-                        </Box>
+                        </Box> */}
+                        <img src={logo} width={64} height={48} alt="logo"  />
                     </Box>
                     {
                         isRightShown && (
