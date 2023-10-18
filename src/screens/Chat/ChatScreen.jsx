@@ -28,7 +28,7 @@ const ChatScreen = () => {
   }, [])
 
   const handleSend = () => {
-       sendChat()
+    sendChat()
     // let item = {
     //   id: Chats.length + 1,
     //   text: chat,
@@ -36,7 +36,7 @@ const ChatScreen = () => {
     //   productList: []
     // }
     // setChats([...chats, item])
-    // setChat("")
+    setChat("")
   }
 
   const sendChat = async () => {
@@ -61,7 +61,10 @@ const ChatScreen = () => {
           isSender: true,
           productList: []
         })
-      }).then(() => console.log("Message send succesfully"))
+      }).then(() => {
+        console.log("Message send succesfully")
+        fetchChats()
+      })
       .catch((error) => console.log(error))
     })
   }
