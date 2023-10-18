@@ -68,6 +68,13 @@ const RegisterTab = () => {
                 userUid : res.user?.uid,
                 email : res.user?.email
             })
+            // await addDoc(collection(db, "chats"), {
+            //     chats : []
+            // }, res.user?.uid)
+            await setDoc(doc(db, "chats", res.user?.uid), {
+                uid : res.user?.uid,
+                chats : []
+            });
             setLoading(false)
             navigate("/chats")
             console.log(`Email: ${email}, Password: ${password}`);   

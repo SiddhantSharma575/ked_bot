@@ -12,13 +12,24 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from 'react-router-dom';
 import { commonComponentStyles } from './styles/components.styles';
 import styles from "./styles/components.module.scss"
+import {auth, db} from "../firebase"
+import { addDoc, collection } from 'firebase/firestore';
 
 export default function ButtonAppBar({ isRightShown }) {
     const navigate = useNavigate()
 
-    const handleNavigation = () => {
-        const id = Math.floor(Math.random() * 999);
-        navigate(`/chat/${id}`)
+    const handleNavigation = async (event) => {
+        event.preventDefault();
+        if(auth.currentUser) {
+            alert("Please Login")
+            return;
+        }
+        try {
+            const id = Math.floor(Math.random() * 999);
+            navigate(`/chat/${id}`)   
+        } catch (error) {
+           
+        }
     }
     return (
         <Box width={'50%'} margin={'auto'} sx={{ flexGrow: 1 }} mt={5}>
