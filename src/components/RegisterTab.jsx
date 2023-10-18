@@ -6,9 +6,9 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useNavigate } from "react-router-dom"
 import { commonComponentStyles } from './styles/components.styles';
 import styles from "./styles/components.module.scss"
-import {auth, db} from "../firebase"
-import {createUserWithEmailAndPassword} from "firebase/auth"
-import {addDoc, collection, doc, setDoc} from "firebase/firestore"
+import { auth, db } from "../firebase"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { addDoc, collection, doc, setDoc } from "firebase/firestore"
 import CircularProgress from "@mui/joy/CircularProgress";
 import { AuthContext } from '../context/AuthContext';
 
@@ -17,11 +17,11 @@ const RegisterTab = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState("")
     const [emailError, setEmailError] = useState(false);
-    const [passwordError,setPasswordError] = useState("")
-    const [isValidUser,setIsValidUser] = useState("")
-    const [loading,setLoading] = useState(false);
+    const [passwordError, setPasswordError] = useState("")
+    const [isValidUser, setIsValidUser] = useState("")
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
-    const { user,setUser } = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
 
 
     const handleEmailChange = (event) => {
@@ -39,16 +39,16 @@ const RegisterTab = () => {
 
     const handleConfirmPasswordChange = (event) => {
         setConfirmPassword(event.target.value)
-        if(event.target.value !== password) {
+        if (event.target.value !== password) {
             setPasswordError("Password do not match")
-        }else {
+        } else {
             setPasswordError("")
         }
     }
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        if(!email || !password || !confirmPassword ) {
+        if (!email || !password || !confirmPassword) {
             setIsValidUser("Please enter all fields!!");
             setTimeout(() => {
                 setIsValidUser("")
@@ -58,26 +58,27 @@ const RegisterTab = () => {
         // Implement your login logic here, e.g., submit data to an API or perform client-side validation
         setLoading(true)
         try {
-            const res = await createUserWithEmailAndPassword(auth,email,password);
-            console.log("USER" , res)
+            const res = await createUserWithEmailAndPassword(auth, email, password);
+            console.log("USER", res)
             setUser({
-                uid : res.user?.uid,
-                email : res.user?.email
+                uid: res.user?.uid,
+                email: res.user?.email
             })
             await addDoc(collection(db, "users"), {
-                userUid : res.user?.uid,
-                email : res.user?.email
+                userUid: res.user?.uid,
+                email: res.user?.email
             })
             // await addDoc(collection(db, "chats"), {
+            //     uid: res.user?.uid,
+            //     chats: []
+            // })
+            // await setDoc(doc(db, "chats"), {
+            //     uid : res.user?.uid,
             //     chats : []
-            // }, res.user?.uid)
-            await setDoc(doc(db, "chats", res.user?.uid), {
-                uid : res.user?.uid,
-                chats : []
-            });
+            // });
             setLoading(false)
             navigate("/chats")
-            console.log(`Email: ${email}, Password: ${password}`);   
+            console.log(`Email: ${email}, Password: ${password}`);
         } catch (error) {
             console.log("Error", error.message)
             setIsValidUser(error.message);

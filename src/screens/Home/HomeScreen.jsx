@@ -1,15 +1,40 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from  "./homeScreen.module.scss"
 import AppBar from '../../components/AppBar'
 import { Box, Typography } from '@mui/material'
 import ChatItem from '../../components/ChatItem'
 import { ChatList } from '../../data/chatList'
 import { AuthContext } from '../../context/AuthContext'
-import {auth} from "../../firebase"
+import {auth, db} from "../../firebase"
+import { collection, getDocs } from 'firebase/firestore'
 
 const HomeScreen = () => {
   const { user,setUser } = useContext(AuthContext);
-  
+  const [chatList,setChatList] = useState([])
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    const homeChats = []
+    const querySnapshot = await getDocs(collection(db, "chats"));
+    querySnapshot.forEach((doc) => {
+      if(doc.data()?.uid  === auth.currentUser?.uid) {
+        const newChat = {
+          id : doc.data().id,
+          recentChat  : doc.data().recentChat,
+          timestamps : doc.data().timestamps,
+          uid : doc.data().uid,
+          allChats : doc.data().allChats
+        }
+        homeChats.push(newChat)
+      }
+    })
+    console.log("hoom----->", homeChats)
+    setChatList(homeChats)
+  }
+
   return (
     <div className={styles.container}>
         <AppBar isRightShown={true} />
@@ -18,7 +43,7 @@ const HomeScreen = () => {
         </Box>
         <Box width={'50%'} margin={'auto'}>
             {
-              ChatList.map((chat) => (
+              chatList.map((chat) => (
                 <ChatItem chat={chat} />
               ))
             }

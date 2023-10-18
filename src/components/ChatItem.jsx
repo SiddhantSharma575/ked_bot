@@ -10,6 +10,7 @@ const ChatItem = ({chat}) => {
     const handleChange  = () => {
         navigate(`/chat/${chat.id}`)
     }
+    console.log("heello", new Date(chat.timestamps.seconds*1000).toDateString())
     return (
         <Card sx={{ minWidth: 275 }} style={{
             cursor : 'pointer',
@@ -23,10 +24,10 @@ const ChatItem = ({chat}) => {
                 }} />
                 <Box marginLeft={2} flex={'3'}>
                     <Typography fontSize={'18px'} color={'black'}>
-                       {chat.title}
+                       {chat.recentChat}
                     </Typography>
                     <Typography mt={'10px'}>
-                        {chat.lastSeen}
+                        {new Date(chat.timestamps.seconds*1000).toDateString()}
                     </Typography>
                 </Box>
                 <ArrowForwardIosOutlinedIcon style={{

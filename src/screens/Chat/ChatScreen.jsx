@@ -1,24 +1,69 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppBar from '../../components/AppBar'
 import { Box, IconButton, TextField } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send';
 import SingleChat from '../../components/SingleChat';
 import { Chats } from '../../data/chats';
 import styles from "./chatScreen.module.scss"
+import { useParams } from 'react-router-dom';
+import { query,  collection, where, getDocs, updateDoc, arrayUnion, doc } from 'firebase/firestore';
+import { db } from '../../firebase';
 
 const ChatScreen = () => {
   const [chat, setChat] = useState("")
-  const [chats, setChats] = useState(Chats)
+  const [chats, setChats] = useState([])
+  const params = useParams()
+  console.log("Params" , params.id)
+
+  const fetchChats = async () => {
+    const q = query(collection(db,"chats"), where("id" , "==", params.id));
+    const querySanpsots = await getDocs(q)
+    querySanpsots.forEach((doc) => {
+      setChats(doc.data().allChats)
+    })
+  }
+
+  useEffect(() => {
+    fetchChats()
+  }, [])
 
   const handleSend = () => {
-    let item = {
-      id: Chats.length + 1,
-      text: chat,
-      isSender: true,
-      productList: []
-    }
-    setChats([...chats, item])
-    setChat("")
+       sendChat()
+    // let item = {
+    //   id: Chats.length + 1,
+    //   text: chat,
+    //   isSender: true,
+    //   productList: []
+    // }
+    // setChats([...chats, item])
+    // setChat("")
+  }
+
+  const sendChat = async () => {
+    const chatCollectionRef =  collection(db, "chats");
+    const q = query(collection(db,"chats"), where("id" , "==", params.id));
+    const docs = await getDocs(q);
+    docs.forEach((docum) => {
+      const data = docum.data();
+      // const newArray = [...data.allChats]
+      // newArray.push({
+      //   id: docs.length+1,
+      //   text: chat,
+      //   isSender: true,
+      //   productList: []
+      // })
+      const docRef = doc(db, "chats", docum.id);
+
+      updateDoc(docRef, {
+        allChats : arrayUnion({
+          id: docum.data().allChats.length+1,
+          text: chat,
+          isSender: true,
+          productList: []
+        })
+      }).then(() => console.log("Message send succesfully"))
+      .catch((error) => console.log(error))
+    })
   }
   return (
     <div className={styles.container}>

@@ -13,20 +13,45 @@ import { useNavigate } from 'react-router-dom';
 import { commonComponentStyles } from './styles/components.styles';
 import styles from "./styles/components.module.scss"
 import {auth, db} from "../firebase"
-import { addDoc, collection } from 'firebase/firestore';
+import { Timestamp, addDoc, arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
+import firebase from "firebase/app"
+import { v4 as uuid } from "uuid";
+
 
 export default function ButtonAppBar({ isRightShown }) {
     const navigate = useNavigate()
+    const unique_id = uuid();
 
     const handleNavigation = async (event) => {
         event.preventDefault();
-        if(auth.currentUser) {
+        if(!auth.currentUser) {
             alert("Please Login")
             return;
-        }
+        }   
         try {
+
             const id = Math.floor(Math.random() * 999);
-            navigate(`/chat/${id}`)   
+            // const chatsRef = doc(db,"chats", auth.currentUser?.uid)
+            
+            const newChat  = {
+                id : unique_id.slice(0,8),
+                uid : auth.currentUser?.uid,
+                timestamps : Timestamp.fromDate(new Date()),
+                recentChat : "Please provide me details of product id 1234566",
+                allChats : [
+                    {
+                        id: 1,
+                        text: "Hello there! How may I assist you today? To get started,please provide the ProductI ID you'd like information about",
+                        isSender: false,
+                        productList: []
+                      },
+                ]
+            }
+            // await updateDoc(chatsRef, {
+            //     chats : arrayUnion(newChat)
+            // })
+             await addDoc(collection(db, "chats"), newChat)
+            navigate(`/chat/${unique_id.slice(0,8)}`)   
         } catch (error) {
            
         }
